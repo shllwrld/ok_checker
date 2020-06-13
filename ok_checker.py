@@ -3,6 +3,7 @@ import argparse
 import requests
 from bs4 import BeautifulSoup
 
+
 OK_LOGIN_URL = \
     'https://www.ok.ru/dk?st.cmd=anonymMain&st.accRecovery=on&st.error=errors.password.wrong'
 OK_RECOVER_URL = \
@@ -17,12 +18,12 @@ def check_login(login_data):
     soup = root_soup.find('div', {'data-l': 'registrationContainer,offer_contact_rest'})
     if soup:
         account_info = soup.find('div', {'class': 'ext-registration_tx taCenter'})
-        masked_email = soup.find('a', {'data-l': 't,email'})
-        masked_phone = soup.find('a', {'data-l': 't,phone'})
+        masked_email = soup.find('button', {'data-l': 't,email'})
+        masked_phone = soup.find('button', {'data-l': 't,phone'})
         if masked_phone:
-            masked_phone = masked_phone.get('data-post')
+            masked_phone = masked_phone.find('div', {'class': 'ext-registration_stub_small_header'}).get_text()
         if masked_email:
-            masked_email = masked_email.get('data-post')
+            masked_email = masked_email.find('div', {'class': 'ext-registration_stub_small_header'}).get_text()
         if account_info:
             masked_name = account_info.find('div', {'class': 'ext-registration_username_header'})
             if masked_name:
