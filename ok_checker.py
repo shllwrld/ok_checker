@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import requests
+import os
 from bs4 import BeautifulSoup
 
 
@@ -63,13 +64,36 @@ def console_output(login_data, parsed_response):
         print('No fault, but server return unknown response')
 
 
-def console_run():
-    arg_parser = argparse.ArgumentParser(description='Simple checker for ok.ru partial private data disclosure')
-    arg_parser.add_argument('login_data', help='known credential to check (email / phone number / username)')
-    args = arg_parser.parse_args()
-    login_data = args.login_data
+def process_login(login_data):
     response = check_login(login_data)
     console_output(login_data, response)
+
+
+def handle_file_input(filename):
+    if os.path.isfile(filename):
+        print(f"processing file {filename}...")
+        with open(filename, "r") as f:
+            logins = f.readlines()
+        for login in logins:
+            print("*" * 60)
+            login = login.strip()
+            process_login(login)
+    else:
+        print(f"file {filename} does not exist")
+
+
+def console_run():
+    arg_parser = argparse.ArgumentParser(description='Simple checker for ok.ru partial private data disclosure')
+    arg_parser.add_argument('login_data', help='known credential to check (email / phone number / username)\
+     or filepath (if option -f is set)')
+    arg_parser.add_argument('-f', '--file', help='input file which contains credentials split by end of line',
+                            action="store_true")
+    args = arg_parser.parse_args()
+    login_data = args.login_data
+    if args.file:
+        handle_file_input(login_data)
+    else:
+        process_login(login_data)
 
 
 if __name__ == '__main__':
