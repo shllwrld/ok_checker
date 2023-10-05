@@ -6,7 +6,7 @@ def test():
     assert result.get('masked_phone') == '992*******26'
     assert result.get('masked_name') == 'Ховар Х******'
     assert result.get('profile_registred') == 'Профиль создан 10 декабря 2014'
-    assert result.get('profile_info') == "47 лет, Худжанд"
+    assert result.get('profile_info') == "48 лет, Худжанд"
 
 
 if __name__ == '__main__':
